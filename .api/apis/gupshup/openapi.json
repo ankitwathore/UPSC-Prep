@@ -1,0 +1,264 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Outbound text session message API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.gupshup.io"
+    }
+  ],
+  "paths": {
+    "/wa/api/v1/msg": {
+      "post": {
+        "tags": [
+          "Text message"
+        ],
+        "summary": "Send text message",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "source",
+                  "destination",
+                  "src.name",
+                  "message"
+                ],
+                "properties": {
+                  "source": {
+                    "type": "integer",
+                    "description": "Source Phone Number",
+                    "example": "918929874278"
+                  },
+                  "destination": {
+                    "type": "integer",
+                    "description": "Destination Phone Number",
+                    "example": "918805162043"
+                  },
+                  "src.name": {
+                    "type": "string",
+                    "description": "App Name",
+                    "example": "august18"
+                  },
+                  "message": {
+                    "title": "Text message",
+                    "type": "object",
+                    "properties": {
+                      "context": {
+                        "type": "object",
+                        "properties": {
+                          "msgId": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "text": {
+                        "type": "string",
+                        "default": "Welcome to Gupshup",
+                        "description": "Message text"
+                      },
+                      "type": {
+                        "default": "text",
+                        "type": "string",
+                        "description": "Type of session message"
+                      },
+                      "previewUrl": {
+                        "default": false,
+                        "type": "boolean",
+                        "description": "Enable preview if the text contains URL"
+                      }
+                    },
+                    "required": [
+                      "text"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "apikey",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "description": "APIKEY of your Gupshup Account",
+            "example": "61b3021c97214370b341f8baaae0xxxx",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "submitted"
+                    },
+                    "messageId": {
+                      "type": "string",
+                      "example": "183dc8f1-7ecc-4419-895f-04fd0b1bfe07"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "title": "Invalid Destination",
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid Destination"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        }
+                      }
+                    },
+                    {
+                      "title": "Invalid App details",
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "example": "Invalid App Details"
+                        },
+                        "status": {
+                          "type": "string",
+                          "example": "error"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication Failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Authentication Failed"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Too Many Requests"
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Message": {
+        "title": "Text message",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "object",
+            "properties": {
+              "msgId": {
+                "type": "string"
+              }
+            }
+          },
+          "text": {
+            "type": "string",
+            "default": "Welcome to Gupshup",
+            "description": "Message text"
+          },
+          "type": {
+            "default": "text",
+            "type": "string",
+            "description": "Type of session message"
+          },
+          "previewUrl": {
+            "default": false,
+            "type": "boolean",
+            "description": "Enable preview if the text contains URL"
+          }
+        },
+        "required": [
+          "text"
+        ]
+      },
+      "bad_request_invalid_destination": {
+        "title": "Invalid Destination",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid Destination"
+          },
+          "status": {
+            "type": "string",
+            "example": "error"
+          }
+        }
+      },
+      "bad_request_invalid_app_details": {
+        "title": "Invalid App details",
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid App Details"
+          },
+          "status": {
+            "type": "string",
+            "example": "error"
+          }
+        }
+      }
+    }
+  }
+}
