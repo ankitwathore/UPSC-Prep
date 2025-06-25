@@ -6,7 +6,33 @@
  */
 function loadQuestions() {
   // TODO: implement XLSX loading logic
-  return [];
+  return [
+    {
+      id: 1,
+      question: "What is the capital of India?",
+      options: {
+        A: "Delhi",
+        B: "Mumbai",
+        C: "Kolkata",
+        D: "Chennai",
+      },
+      correctAnswer: "A",
+      explanation: "Delhi is the capital of India.",
+    },
+    {
+      id: 2,
+      question: "Which planet is known as the Red Planet?",
+      options: {
+        A: "Earth",
+        B: "Mars",
+        C: "Jupiter",
+        D: "Saturn",
+      },
+      correctAnswer: "B",
+      explanation:
+        "Mars is called the Red Planet due to its reddish appearance.",
+    },
+  ];
 }
 
 /**
@@ -15,8 +41,9 @@ function loadQuestions() {
  * @returns {Object} Single question object
  */
 function getRandomQuestion(questions) {
+  const index = Math.floor(Math.random() * questions.length);
+  return questions[index];
   // TODO: pick and return random question
-  return {};
 }
 
 /**
