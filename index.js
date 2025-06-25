@@ -1,5 +1,4 @@
 // index.js
-const SECRET_TOKEN = "your-secret"; // define at top of file
 const express = require("express");
 const bodyParser = require("body-parser");
 const {
@@ -27,8 +26,8 @@ app.post("/webhook", (req, res) => {
   const payload = req.body;
   const incomingMsg = payload?.text?.toLowerCase()?.trim();
   const from = payload?.sender;
-
-  const token = req.headers["x-api-key"];
+  const token = payload?.token;
+  const SECRET_TOKEN = process.env.SECRET_TOKEN;
 
   if (token !== SECRET_TOKEN) {
     return res.status(401).json({ message: "Unauthorized" });
