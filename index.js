@@ -1,5 +1,5 @@
 // index.js
-
+const SECRET_TOKEN = "your-secret"; // define at top of file
 const express = require("express");
 const bodyParser = require("body-parser");
 const {
@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 // Load questions once at startup
 const questions = loadQuestions();
 
-console.log(questions); 
+console.log(questions);
 
 // Gupshup webhook endpoint
 app.post("/webhook", (req, res) => {
@@ -26,15 +26,29 @@ app.post("/webhook", (req, res) => {
   const incomingMsg = payload?.text?.toLowerCase()?.trim();
   const from = payload?.sender;
 
+  const token = req.headers["x-api-key"];
+
+  if (token !== SECRET_TOKEN) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
   console.log(`Message from ${from}: ${incomingMsg}`);
 
   // Send a new question if user types "hi"
   if (incomingMsg === "hi") {
-    const q = getRandomQuestion(questions);
+    setTimeout(() => {
+      const q = getRandomQuestion(questions);
 
-    const message = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D or multiple like A,B)_`;
+      const message = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D)_`;
 
-    return res.json({ message });
+      // Use Gupshup message API to send response manually here (optional in future)
+      console.log(`Sending question to ${from}`);
+    }, 10000); // 10 seconds
+
+    return res.json({
+      message:
+        "✅ You're authenticated. Sending your first question in 10 seconds...",
+    });
   }
 
   // Check if input looks like an answer (A, B, A,B etc.)
