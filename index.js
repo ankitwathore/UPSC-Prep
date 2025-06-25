@@ -26,7 +26,7 @@ app.post("/webhook", (req, res) => {
   const payload = req.body;
   const incomingMsg = payload?.text?.toLowerCase()?.trim();
   const from = payload?.sender;
-  const token = payload?.token;
+  const token = req.headers["x-api-key"];
   const SECRET_TOKEN = process.env.SECRET_TOKEN;
 
   if (token !== SECRET_TOKEN) {
@@ -56,7 +56,8 @@ app.post("/webhook", (req, res) => {
             apikey: process.env.GUPSHUP_APP_TOKEN,
           },
         });
-
+        // console.log("Gupshup response:", response.data);
+        console.log("Gupshup response:", response.data);
         console.log(`✅ Sent delayed question to ${from}`);
       } catch (err) {
         console.error(
