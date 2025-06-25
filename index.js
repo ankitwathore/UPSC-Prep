@@ -43,7 +43,7 @@ app.post("/webhook", (req, res) => {
       const message = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D)_`;
 
       try {
-        await axios.post("https://api.gupshup.io/sandbox/api/v1/msg", null, {
+        await axios.post("https://api.gupshup.io/sm/api/v2/msg", null, {
           params: {
             channel: "whatsapp",
             source: process.env.GUPSHUP_SOURCE,
