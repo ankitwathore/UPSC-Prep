@@ -40,24 +40,26 @@ app.post("/webhook", (req, res) => {
     setTimeout(async () => {
       const q = getRandomQuestion(questions);
 
-      const message = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D)_`;
+      const messageText = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D)_`;
 
       try {
-        await axios.post("https://api.gupshup.io/sm/api/v2/msg", null, {
-          params: {
-            channel: "whatsapp",
-            source: process.env.GUPSHUP_SOURCE,
-            destination: from.replace("whatsapp:", ""),
-            message: message,
-            "src.name": process.env.GUPSHUP_APP_NAME,
+        const gupshup = await import("@api/gupshup");
+
+        const { data } = await gupshup.default.postMsg({
+          channel: "whatsapp",
+          source: parseInt(process.env.GUPSHUP_SOURCE),
+          destination: parseInt(from.replace("whatsapp:", "")),
+          message: {
+            type: "text",
+            text: messageText,
           },
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            apikey: process.env.GUPSHUP_APP_TOKEN,
-          },
+          "src.name": process.env.GUPSHUP_APP_NAME,
+          disablePreview: false,
+          encode: false,
+          apikey: process.env.GUPSHUP_APP_TOKEN,
         });
-        // console.log("Gupshup response:", response.data);
-        console.log("Gupshup response:", response.data);
+
+        console.log("Gupshup SDK response:", data);
         console.log(`✅ Sent delayed question to ${from}`);
       } catch (err) {
         console.error(
@@ -65,12 +67,7 @@ app.post("/webhook", (req, res) => {
           err.response?.data || err.message,
         );
       }
-    }, 10000); // 10-second delay
-
-    return res.json({
-      message:
-        "✅ You're authenticated. Sending your first question in 10 seconds...",
-    });
+    }, 10000);
   }
 
   // Check if input looks like an answer (A, B, A,B etc.)
