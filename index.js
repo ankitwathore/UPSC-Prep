@@ -61,11 +61,13 @@ app.post("/webhook", (req, res) => {
 
         console.log("Gupshup SDK response:", data);
         console.log(`✅ Sent delayed question to ${from}`);
+        console.log("Im in try block");
       } catch (err) {
         console.error(
           "❌ Failed to send message:",
           err.response?.data || err.message,
         );
+        console.log(err);
       }
     }, 10000);
   }
