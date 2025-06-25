@@ -18,6 +18,8 @@ app.get("/", (req, res) => {
 // Load questions once at startup
 const questions = loadQuestions();
 
+console.log(questions); 
+
 // Gupshup webhook endpoint
 app.post("/webhook", (req, res) => {
   const payload = req.body;
