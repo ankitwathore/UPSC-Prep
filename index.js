@@ -8,6 +8,8 @@ const {
   isAnswerCorrect,
 } = require("./utils/quizUtils");
 
+require("dotenv").config();
+const axios = require("axios");
 const app = express();
 app.use(bodyParser.json());
 
@@ -36,14 +38,34 @@ app.post("/webhook", (req, res) => {
 
   // Send a new question if user types "hi"
   if (incomingMsg === "hi") {
-    setTimeout(() => {
+    setTimeout(async () => {
       const q = getRandomQuestion(questions);
 
       const message = `📌 *Question #${q.id}*\n\n${q.question}\n\nA) ${q.options.A}\nB) ${q.options.B}\nC) ${q.options.C}\nD) ${q.options.D}\n\n_Reply with your answer (A/B/C/D)_`;
 
-      // Use Gupshup message API to send response manually here (optional in future)
-      console.log(`Sending question to ${from}`);
-    }, 10000); // 10 seconds
+      try {
+        await axios.post("https://api.gupshup.io/sm/api/v1/msg", null, {
+          params: {
+            channel: "whatsapp",
+            source: process.env.GUPSHUP_SOURCE,
+            destination: from.replace("whatsapp:", ""),
+            message: message,
+            "src.name": process.env.GUPSHUP_APP_NAME,
+          },
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            apikey: process.env.GUPSHUP_APP_TOKEN,
+          },
+        });
+
+        console.log(`✅ Sent delayed question to ${from}`);
+      } catch (err) {
+        console.error(
+          "❌ Failed to send message:",
+          err.response?.data || err.message,
+        );
+      }
+    }, 10000); // 10-second delay
 
     return res.json({
       message:
