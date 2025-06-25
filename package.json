@@ -1,8 +1,8 @@
 {
   "name": "nodejs",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
-  }
+    "@types/node": "^22.13.11",
+    "body-parser": "^2.2.0",
+    "express": "^5.1.0",
+    "node-cron": "^4.1.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {},
+  "description": ""
 }
