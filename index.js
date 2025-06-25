@@ -45,7 +45,7 @@ app.post("/webhook", (req, res) => {
       try {
         const gupshup = await import("@api/gupshup");
 
-        const { data } = await gupshup.default.postMsg({
+        const { data } = await gupshup.default.postWaApiV1Msg({
           channel: "whatsapp",
           source: parseInt(process.env.GUPSHUP_SOURCE),
           destination: parseInt(from.replace("whatsapp:", "")),
